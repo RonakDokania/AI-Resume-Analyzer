@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Analyzer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="M8 2v4M16 2v4M3 10h18"/><circle cx="9" cy="15" r="1.2"/><circle cx="15" cy="15" r="1.2"/></svg>
+      </div>
+      <span class="brand-name">ResumeIQ</span>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
+  <main class="container">
+    <!-- HERO + UPLOAD -->
+    <section id="heroSection" class="hero">
+      <div class="hero-copy">
+        <div class="robot-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/><path d="M9 17h6"/></svg>
+          <span>Powered by Gemini AI</span>
+        </div>
+        <h1 class="hero-title">AI Resume Analyzer</h1>
+        <p class="hero-subtitle">
+          Analyze your resume using AI and receive ATS Score, Technical Score,
+          Communication Score, Missing Skills and personalized suggestions.
+        </p>
+        <ul class="hero-features">
+          <li><span>✓</span> ATS-friendly scoring</li>
+          <li><span>✓</span> Skill gap detection</li>
+          <li><span>✓</span> Personalized suggestions</li>
+        </ul>
+      </div>
+      <form id="resumeForm" class="upload-card glass" autocomplete="off">
+        <h2 class="card-title">Upload your resume</h2>
+        <p class="card-sub">PDF only · analyzed in seconds</p>
+        <label class="field">
+          <span>Full Name</span>
+          <input type="text" id="name" name="name" placeholder="Jane Doe" required />
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required />
+        </label>
+        <label class="field file-field" id="dropZone">
+          <span>Resume (PDF)</span>
+          <input type="file" id="resume" name="resume" accept="application/pdf" required />
+          <div class="file-display" id="fileDisplay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span class="file-text">Click or drop your PDF here</span>
+          </div>
+        </label>
+        <button type="submit" id="analyzeBtn" class="btn-primary">
+          <span>Analyze Resume</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+    </section>
+    <!-- LOADING -->
+    <section id="loadingSection" class="loading hidden">
+      <div class="loader-ring"></div>
+      <h3>AI is analyzing your resume...</h3>
+      <p>Extracting text, scoring ATS compatibility, and generating insights.</p>
+    </section>
+    <!-- ERROR -->
+    <section id="errorSection" class="error-card glass hidden">
+      <div class="error-icon">!</div>
+      <h3 id="errorTitle">Something went wrong</h3>
+      <p id="errorMessage">We couldn't analyze your resume. Please try again.</p>
+      <button id="errorRetry" class="btn-secondary">Try again</button>
+    </section>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="dashboard hidden">
+      <div class="dashboard-header">
+        <div>
+          <h2>Your Resume Report</h2>
+          <p class="muted">AI-powered insights based on your resume content.</p>
+        </div>
+        <div class="dashboard-actions">
+          <button id="analyzeAnother" class="btn-secondary">Analyze Another Resume</button>
+          <button id="downloadReport" class="btn-primary small">Download Report</button>
+        </div>
+      </div>
+      <div class="scores-grid">
+        <div class="score-card glass" data-score="overall">
+          <div class="score-label">Overall Score</div>
+          <div class="score-value"><span class="num" data-target="0">0</span><small>/100</small></div>
+          <div class="progress"><div class="progress-bar"></div></div>
+        </div>
+        <div class="score-card glass" data-score="ats">
+          <div class="score-label">ATS Score</div>
+          <div class="score-value"><span class="num" data-target="0">0</span><small>/100</small></div>
+          <div class="progress"><div class="progress-bar"></div></div>
+        </div>
+        <div class="score-card glass" data-score="technical">
+          <div class="score-label">Technical Score</div>
+          <div class="score-value"><span class="num" data-target="0">0</span><small>/100</small></div>
+          <div class="progress"><div class="progress-bar"></div></div>
+        </div>
+        <div class="score-card glass" data-score="communication">
+          <div class="score-label">Communication Score</div>
+          <div class="score-value"><span class="num" data-target="0">0</span><small>/100</small></div>
+          <div class="progress"><div class="progress-bar"></div></div>
+        </div>
+      </div>
+      <div class="sections-grid">
+        <div class="section-card glass strengths">
+          <h3><span class="dot"></span> Strengths</h3>
+          <ul id="strengthsList"></ul>
+        </div>
+        <div class="section-card glass weaknesses">
+          <h3><span class="dot"></span> Weaknesses</h3>
+          <ul id="weaknessesList"></ul>
+        </div>
+        <div class="section-card glass missing">
+          <h3><span class="dot"></span> Missing Skills</h3>
+          <ul id="missingList"></ul>
+        </div>
+        <div class="section-card glass suggestions">
+          <h3><span class="dot"></span> Suggestions</h3>
+          <ul id="suggestionsList"></ul>
+        </div>
+      </div>
+      <div class="roles-card glass">
+        <h3>Recommended Roles</h3>
+        <div class="chips" id="rolesChips"></div>
+      </div>
+      <div class="summary-card">
+        <h3>Improved Summary</h3>
+        <p id="improvedSummary"></p>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p>© <span id="year"></span> ResumeIQ · Built with FastAPI, n8n & Gemini</p>
+  </footer>
+  <div id="toast" class="toast hidden"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

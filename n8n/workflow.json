@@ -1,0 +1,148 @@
+{
+  "name": "AI Resume Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "resume-analysis",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "04a1e804-81b4-4a20-87c2-1b720810e35d",
+      "name": "Webhook",
+      "webhookId": "1e7851e7-91b8-4b5a-9257-099196ea9b59"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert ATS Resume Reviewer.\n\nYou will receive\n\nResume\n\nJob Description\n\nCompare both.\n\nReturn ONLY valid JSON.\n\n{\n\"overall_score\":0,\n\"ats_score\":0,\n\"job_match_score\":0,\n\"technical_score\":0,\n\"communication_score\":0,\n\"strengths\":[],\n\"weaknesses\":[],\n\"missing_skills\":[],\n\"matching_skills\":[],\n\"suggestions\":[],\n\"recommended_roles\":[],\n\"improved_summary\":\"\"\n}\n\nResume\n\n{{ $json.body.resume_text }}\n\nJob Description\n\n{{ $json.job_description }}",
+        "options": {
+          "systemMessage": "=You are an expert ATS Resume Reviewer, HR Recruiter, and Career Coach.\n\nYour task is to analyze the provided resume.\n\nEvaluate:\n1. Overall resume quality\n2. ATS compatibility\n3. Technical skills\n4. Communication quality\n5. Project quality\n6. Work experience\n7. Education\n8. Missing skills\n9. Resume formatting\n10. Suggestions for improvement\n\nReturn ONLY valid JSON.\n\nUse this exact structure:\n\n{\n  \"overall_score\": 0,\n  \"ats_score\": 0,\n  \"technical_score\": 0,\n  \"communication_score\": 0,\n  \"strengths\": [\n    \"\"\n  ],\n  \"weaknesses\": [\n    \"\"\n  ],\n  \"missing_skills\": [\n    \"\"\n  ],\n  \"suggestions\": [\n    \"\"\n  ],\n  \"recommended_roles\": [\n    \"\"\n  ],\n  \"improved_summary\": \"\"\n}\n\nDo not include markdown.\nDo not wrap the JSON inside triple backticks.\nReturn only the JSON object."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        160,
+        0
+      ],
+      "id": "45c78668-8d93-4720-84fa-746848a9c35c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        144
+      ],
+      "id": "dc8f4dda-465d-4284-bb98-10b17ab92640",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "9EK3DZcY2Z4w0UBn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        608,
+        0
+      ],
+      "id": "d1931bcb-2960-4a39-bfef-ec295363900c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  return {\n    json: JSON.parse(item.json.output)\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        0
+      ],
+      "id": "c3bcbd9c-06f4-4ef4-9b19-b2b14b4ecae6",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "95e62533-0b62-4dc5-a887-39a7c43fc530",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "746c6a10b0b81e089666c1bd6159552d592faeac03292f730c95733cf821516b"
+  },
+  "nodeGroups": [],
+  "id": "gDzhKn39VOV7D3Mx",
+  "tags": []
+}

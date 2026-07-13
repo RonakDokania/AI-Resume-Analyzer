@@ -196,33 +196,16 @@ Frontend Dashboard
 
 ---
 
-## 📊 Resume Analysis Dashboard
-
-![Analysis](screenshots/analysis.png)
-
----
-
 ## ⏳ Loading Screen
 
 ![Loading](screenshots/loading.png)
 
-## Home
-
-> Add screenshot here
-
 ---
 
-## Analysis Dashboard
+## 📊 Resume Analysis Dashboard
 
-> Add screenshot here
+![Analysis](screenshots/analysis.png)
 
----
-
-## Loading Screen
-
-> Add screenshot here
-
----
 
 # 🚀 Future Enhancements
 

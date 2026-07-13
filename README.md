@@ -190,6 +190,22 @@ Frontend Dashboard
 
 # 📸 Screenshots
 
+## 🏠 Home Page
+
+![Home](screenshots/home.png)
+
+---
+
+## 📊 Resume Analysis Dashboard
+
+![Analysis](screenshots/analysis.png)
+
+---
+
+## ⏳ Loading Screen
+
+![Loading](screenshots/loading.png)
+
 ## Home
 
 > Add screenshot here

@@ -2,10 +2,7 @@
    AI Resume Analyzer — Frontend Logic
    ============================================================ */
 const API_ENDPOINT =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
-    ? "http://127.0.0.1:8000/analyze-resume"
-    : "https://YOUR_RENDER_BACKEND_URL/analyze-resume";
+  "https://ai-resume-analyzer-backend-j649.onrender.com/analyze-resume";
 /* ---------- DOM ---------- */
 const $ = (id) => document.getElementById(id);
 const els = {
